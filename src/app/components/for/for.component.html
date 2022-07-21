@@ -1,0 +1,35 @@
+<!-- <ul>
+  <li *ngFor="let item of heros">{{ item.id }}--{{item.name}}</li>
+</ul> -->
+
+<!-- trackBy接收一个函数，返回 NgFor 应该跟踪的值（比如id），这样刷新列表时，id相同的dom不会触发更新 -->
+
+<div class="control">
+  <input [(ngModel)]="value" (keyup.enter)="add()" />
+  <div class="btns">
+    <button class="btn btn-primary" (click)="add()">add</button>
+    <button class="btn btn-info" (click)="reset()">reset</button>
+  </div>
+</div>
+<ul>
+  <li
+    *ngFor="let item of heros; index as i ; count as len;"
+    >
+    {{ i }}--{{len}}--{{item.name}}
+  </li>
+</ul>
+
+<!-- <ul>
+  <li
+    *ngFor="let item of heros; index as i ; count as len;
+    trackBy: trackByHero"
+    >
+    {{ i }}--{{len}}--{{item.name}}
+  </li>
+</ul> -->
+
+<!-- 使用井号（#）声明模板引用变量，可以获取 DOM 元素 -->
+<!-- 还有种写法就是ref, 下面两种写法是一样的 -->
+<input #phone placeholder="phone number"/>
+<input ref-phone placeholder="phone number"/>
+<button class="btn btn-primary" (click)="callPhone(phone.value)">Call</button>
