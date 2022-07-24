@@ -20,8 +20,8 @@ import { NotFoundComponent } from './router-study/not-found/not-found.component'
 import { HeroesModule } from './router-study/heroes/heroes.module';
 import { CrisisCenterModule } from './router-study/crisis-center/crisis-center.module';
 import { NameEditorComponent } from './form-study/name-editor/name-editor.component';
-import { ProfileEditorComponent } from './form-study/profile-editor/profile-editor.component';
-
+import { ProfileEditorComponent } from './form-study/reactiveForm/profile-editor/profile-editor.component';
+import { EqualValidatorDirective } from './form-study/equal-validator.directive';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { ProfileEditorComponent } from './form-study/profile-editor/profile-edit
     // CrisisListComponent,
     NotFoundComponent,
     NameEditorComponent,
-    ProfileEditorComponent
+    ProfileEditorComponent,
+    EqualValidatorDirective
   ],
   imports: [
     BrowserModule,

@@ -1,62 +1,75 @@
 <div class="profile-editor">
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-    <label class="d-block" for="first-name">First Name: </label>
-    <input id="first-name" type="text" formControlName="firstName">
-
-    <div *ngIf="firstName.dirty && firstName.errors" class="alert alert-danger">
-      <span>请填写 First Name </span>
-      <!-- <p>valid : {{ firstName.valid }}</p>
-      <p>errors : {{ firstName.errors | json  }}</p> -->
-    </div>
-
-    <label class="d-block" for="last-name">Last Name: </label>
-    <input id="last-name" type="text" formControlName="lastName">
-
-    <div *ngIf="lastName.dirty && lastName.errors as errors" class="alert alert-danger">
-      <span *ngIf="errors['required']">请填写 Last Name </span>
-      <span *ngIf="errors['minlength']">至少4个字</span>
-      <span *ngIf="errors['forbiddenName']">不能包含bob</span>
-
-      <!-- 将老版的 lastName.errors.required 改成 lastName.errors['required']  -->
-      <!-- <span *ngIf="lastName.errors.required">请填写 Last Name </span>
-      <span *ngIf="lastName.errors.minlength">至少4个字</span> -->
-
-      <!-- <p>valid : {{ lastName.valid }}</p>
-      <p>errors : {{ lastName.errors | json  }}</p> -->
-    </div>
-
-    <button class="btn btn-primary" type="submit">submit</button>
-
-    <div formGroupName="address">
-      <h2>Address</h2>
-      <label class="d-block" for="street">Street: </label>
-      <input id="street" type="text" formControlName="street">
-
-      <label class="d-block" for="city">City: </label>
-      <input id="city" type="text" formControlName="city">
-
-      <label class="d-block" for="state">State: </label>
-      <input id="state" type="text" formControlName="state">
-
-      <label class="d-block" for="zip">Zip Code: </label>
-      <input id="zip" type="text" formControlName="zip">
-
-    </div>
-
-    <div formArrayName="aliases">
-      <h2>Aliases</h2>
-      <button class="btn btn-secondary" type="button" (click)="addAlias()">+ Add alias</button>
-
-      <div *ngFor="let alias of aliases.controls; let i=index">
-        <!-- The repeated alias template -->
-        <label for="alias-{{ i }}">Alias:</label>
-        <input id="alias-{{ i }}" type="text" [formControlName]="i">
+  <!--
+    如果引入了FormsModule, <form>上就可以使用ngForm指令
+    profileForm就是NgForm类型, profileForm.form是FormGroup实例
+   -->
+    <form #profileForm="ngForm" appEqualValidator>
+      <p>valid: {{ profileForm.valid }}</p>
+      <div>
+        <label>
+          First Name:
+          <input class="form-control" #firstName="ngModel" required [(ngModel)]="model.firstName" name="firstName" />
+        </label>
+        <div *ngIf="firstName.dirty && firstName.errors" class="alert alert-danger">
+          <span>请填写first name</span>
+        </div>
       </div>
-    </div>
-
-    <button class="btn btn-primary" type="button" (click)="updateProfile()">Update Profile</button>
-    <button class="btn btn-success" type="submit">submit</button>
-  </form>
-</div>
-
-
+      <div>
+        <label>
+          Last Name:
+          <input class="form-control" required minlength="4" appForbiddenName="bob" #lastName="ngModel" [(ngModel)]="model.lastName" name="lastName" />
+        </label>
+        <div *ngIf="lastName.dirty && lastName.errors as errors" class="alert alert-danger">
+          <span *ngIf="errors['required']">请填写last name</span>
+          <span *ngIf="errors['minlength']">至少4个字</span>
+          <span *ngIf="errors['forbiddenName']">{{ errors['forbiddenName'].value }}</span>
+        </div>
+      </div>
+      <div>
+        <label>
+          mobile:
+          <input
+            class="form-control"
+            type="tel"
+            required
+            pattern="\d{11}"
+            appHasMobileValidator
+            [(ngModel)]="model.mobile"
+            #mobile="ngModel"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            name="mobile" />
+        </label>
+        <div *ngIf="mobile.dirty && mobile.errors as errors" class="alert alert-danger">
+          <span *ngIf="errors['required']">请填写手机号</span>
+          <span *ngIf="errors['pattern']">格式不正确</span>
+          <span *ngIf="errors['exist']">{{ errors['exist'] }}</span>
+        </div>
+      </div>
+      <div>
+        <div>
+          <label>
+            password:
+            <input class="form-control" required #password="ngModel" [(ngModel)]="model.password" name="password" />
+          </label>
+          <div *ngIf="password.dirty && password.errors" class="alert alert-danger">
+            <span>请填写密码</span>
+          </div>
+        </div>
+        <div>
+          <label>
+            rePassword:
+            <input class="form-control" required #rePassword="ngModel" [(ngModel)]="model.rePassword" name="rePassword" />
+          </label>
+          <div *ngIf="rePassword.dirty && rePassword.errors" class="alert alert-danger">
+            <span>请再次填写密码</span>
+          </div>
+        </div>
+        <!-- <div *ngIf="profileForm.errors" class="cross-validation-error-message alert alert-danger">
+          {{ profileForm.errors.equal }}
+        </div> -->
+      </div>
+      <button class="btn btn-primary" type="submit">提交</button>
+      <!-- <button class="btn btn-secondary ml-2" type="button" (click)="onReset(profileForm)">reset</button>
+      <button class="btn btn-danger ml-2" type="button" (click)="getError(profileForm)">get Error</button> -->
+    </form>
+  </div>
